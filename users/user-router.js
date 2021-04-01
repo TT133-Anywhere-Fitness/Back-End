@@ -27,7 +27,7 @@ router.post("/sign-up", async (req, res, next) => {
         username,
         role,
       },
-      process.env.TOKEN_SECRET || process.env.SECOND_SECRET
+      process.env.TOKEN_SECRET
     );
 
     // send the token to the front-end
@@ -73,9 +73,8 @@ router.post("/login", async (req, res, next) => {
           username: userFromDB.username,
           role: userFromDB.role,
         },
-        process.env.TOKEN_SECRET || process.env.SECOND_SECRET
+        process.env.TOKEN_SECRET
       );
-      res.cookie('token', token);
       // send the token to the front-end
       res.status(200).json({
         token,
