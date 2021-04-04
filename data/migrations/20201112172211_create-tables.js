@@ -12,11 +12,11 @@ exports.up = async function(knex) {
       table.text('numberOfRegisteredAttendees')
       table.integer('maxClassSize')
   })
-  .createTable("roles", (tbl) => {
+  .createTable('roles', (tbl) => {
     tbl.increments("id");
     tbl.string("name").unique().notNullable();
   })
-  .createTable("users", (tbl) => {
+  .createTable('users', (tbl) => {
     tbl.uuid("id").primary();
     tbl.string("username", 128).notNullable().unique();
     tbl.string("password", 256).notNullable();
@@ -27,6 +27,6 @@ exports.up = async function(knex) {
 exports.down = async function(knex) {
   await knex.schema
   .dropTableIfExists('classes')
-  .dropTableIfExists("users")
-  .dropTableIfExists("roles");
+  .dropTableIfExists('users')
+  .dropTableIfExists('roles');
 };

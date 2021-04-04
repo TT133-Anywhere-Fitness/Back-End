@@ -6,6 +6,7 @@ const restrict = require("../users/user-middleware");
 
 const router = express.Router();
 
+
 router.post("/register", async (req, res, next) => {
   try {
     // get username, password, role out from request body
@@ -34,6 +35,8 @@ router.post("/register", async (req, res, next) => {
     // send the token to the front-end
     res.status(201).json({
       token,
+      username, 
+      role
     });
   } catch (error) {
     next(error);
