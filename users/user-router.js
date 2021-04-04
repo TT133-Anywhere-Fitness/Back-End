@@ -2,10 +2,11 @@ const express = require("express");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const Users = require("./user-model");
+const restrict = require("../users/user-middleware");
 
 const router = express.Router();
 
-router.post("/sign-up", async (req, res, next) => {
+router.post("/register", async (req, res, next) => {
   try {
     // get username, password, role out from request body
     const { username, password, role } = req.body;
@@ -88,6 +89,67 @@ router.post("/login", async (req, res, next) => {
     }
   } catch (error) {
     next(error);
+  }
+});
+
+
+//-----------------------------------------------------------------------------
+//  GETs all user accounts. (You must be logged in with instructor role)
+// /api/users/getusers
+//-----------------------------------------------------------------------------
+router.get("/users", restrict("instructor"), async (req, res, next) => {
+  try {
+    const users = await db.allUsers();
+    res.status(200).json(users);
+  } catch (err) {
+    next(err);
+  }
+});
+
+//-----------------------------------------------------------------------------
+// PUT updates user   /api/users/update/:id
+//-----------------------------------------------------------------------------
+router.put("/:id", restrict("instructor"), async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const changes = req.body;
+    const user = db.findById(id);
+
+    if (user) {
+      db.updateUser(changes, id).then((updatedUser) => {
+        res.json({
+          Success: updatedUser + " User has been updated successfully.",
+        });
+      });
+    } else {
+      res.status(404).json({
+        Error: "Could not find User with given id. please try another user id",
+      });
+    }
+  } catch (err) {
+    next(err);
+  }
+});
+
+//-----------------------------------------------------------------------------
+// DELETE   user   /api/users/delete/:id
+//-----------------------------------------------------------------------------
+router.delete("/:id", restrict("instructor"), async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const deleteduser = db.removeUser(id);
+
+    if (deleteduser) {
+      res.json({
+        Deleted: " User has been successfully deleted.",
+      });
+    } else {
+      res.status(404).json({
+        Error: "Could not find User with given id. Please try another User id.",
+      });
+    }
+  } catch (err) {
+    next(err);
   }
 });
 

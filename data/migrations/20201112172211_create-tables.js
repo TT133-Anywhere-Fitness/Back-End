@@ -1,6 +1,7 @@
 
 exports.up = async function(knex) {
-  await knex.schema.createTable('classes', (table) => {
+  await knex.schema
+  .createTable('classes', (table) => {
       table.increments('id')
       table.text('name').notNull
       table.text('type')
@@ -11,8 +12,21 @@ exports.up = async function(knex) {
       table.text('numberOfRegisteredAttendees')
       table.integer('maxClassSize')
   })
+  .createTable("roles", (tbl) => {
+    tbl.increments("id");
+    tbl.string("name").unique().notNullable();
+  })
+  .createTable("users", (tbl) => {
+    tbl.uuid("id").primary();
+    tbl.string("username", 128).notNullable().unique();
+    tbl.string("password", 256).notNullable();
+    tbl.string("role").notNullable().references("name").inTable("roles");
+  })
 };
 
 exports.down = async function(knex) {
-  await knex.schema.dropTableIfExists('classes');
+  await knex.schema
+  .dropTableIfExists('classes')
+  .dropTableIfExists("users")
+  .dropTableIfExists("roles");
 };
