@@ -1,5 +1,6 @@
 const express = require('express');
 const Classes = require('./class-model');
+const restrict = require("../users/user-middleware");
 
 const router = express.Router();
 
@@ -26,7 +27,7 @@ router.get('/:id', async (req, res, next) => {
     }
 })
 
-router.put('/:id', async (req, res, next) => {
+router.put('/:id', restrict("instructor"), async (req, res, next) => {
     try{
        const updateClass = await Classes.updateClass(req.body, req.params.id);
        if(!updateClass){
@@ -40,7 +41,7 @@ router.put('/:id', async (req, res, next) => {
     }
 })
 
-router.delete('/:id', async (req, res, next) => {
+router.delete('/:id', restrict("instructor"), async (req, res, next) => {
     try{
         await Classes.removeClass(req.params.id);
         return res.status(204).json({
@@ -51,7 +52,7 @@ router.delete('/:id', async (req, res, next) => {
     }
 })
 
-router.post('/', async (req, res, next) => {
+router.post('/', restrict("instructor"), async (req, res, next) => {
     try{
         const newClass = await Classes.addClass(req.body);
         if(!newClass.name){
