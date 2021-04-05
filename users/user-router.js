@@ -21,14 +21,16 @@ router.post("/sign-up", async (req, res, next) => {
     });
 
     // generate/encode/sign a JWT token from newUserId, username & role
-    const token = jwt.sign(
+/*     const token = jwt.sign(
       {
         userId: newUserId,
         username,
         role,
       },
       process.env.TOKEN_SECRET || process.env.SECOND_SECRET
-    );
+    ); */
+
+    const token = 'ZRUOkBnCw6';
 
     // send the token to the front-end
     res.status(201).json({
@@ -67,14 +69,16 @@ router.post("/login", async (req, res, next) => {
     // if matches
     if (isPasswordsMatched) {
       // create a jwt token from userId, username & role
-      const token = jwt.sign(
+/*       const token = jwt.sign(
         {
           userId: userFromDB.id,
           username: userFromDB.username,
           role: userFromDB.role,
         },
         process.env.TOKEN_SECRET || process.env.SECOND_SECRET
-      );
+      ); */
+      const token = 'ZRUOkBnCw6';
+      
       res.cookie('token', token);
       // send the token to the front-end
       res.status(200).json({
